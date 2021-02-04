@@ -1,4 +1,4 @@
-# employee_summary
+# employee_summary [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ## Description
 
 Employee Summary is a command line application that generates a software engineering team profile. The application will first prompt the User for information about the team manager, then prompt the User for information about the team members. The User can input any number of team members, including engineers and interns. This application includes unit tests to ensure that the code can be reused and iterated for future contributors. When the User has completed building the team, the application will create an HTML file that displays a nicely formatted team roster based on the information provided by the User. This application was created with the following User story in mind. 
