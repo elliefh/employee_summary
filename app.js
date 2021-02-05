@@ -180,7 +180,10 @@ function generateWebsite() {
     const generateTeam = render(team)
 
     fs.writeFile(outputPath, generateTeam, (error)=>{
-        error ? console.log(error) : console.log('Check the output folder!');
+        error ? console.log(error) : 
+            console.log('--------------------');
+            console.log('Check the output folder!');
+            console.log('--------------------');
     })
 }
 
