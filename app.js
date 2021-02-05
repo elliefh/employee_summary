@@ -10,26 +10,179 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const team = [];
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+// function to initialize program
+function init() {
+    console.log('--------------------');
+    console.log("Welcome! To get your team profile website generated, you will answer a series of prompts. Let's get started!");    
+    console.log('--------------------');
+    manager();
+}
 
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
+// function to prompt manager-related details, which enable us to call the Manager constructor 
+function manager() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: "Please enter the manager's name:",
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: "Please enter the manager's ID number:",
+            name: 'id'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the manager's email:",
+            name: 'email'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the manager's office number:",
+            name: 'office'   
+        },
+    ])
+    .then(response => {
+        // Create a new manager profile with user's inputs 
+        const newManager = new Manager(response.name, response.id, response.email, response.office);
+        // Store manager profile details into the team object
+        team.push(newManager);
+        
+        // Call nextStep function
+        nextStep();
+    });
+}
 
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
+// function to determine whether User wants to continue adding team members or create team website 
+function nextStep() {
+    inquirer
+    .prompt([
+        {
+            type: 'list',
+            message: 'Please select the next step you would like to take:',
+            name: 'nextStep',
+            choices: ['Add Team Member', 'Create Team Profile']
+        }
+    ]).then(response => {
+        switch(response.nextStep) {
+            case 'Add Team Member':
+                employeeType();
+                break;
+            case 'Create Team Profile':
+                generateWebsite();
+                break;
+        }
+    })
+}
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
+// function to determine employee type  
+function employeeType() {
+    inquirer
+    .prompt([
+        {
+            type: 'list',
+            message: 'Please select employee type',
+            name: 'role',
+            choices: ['Manager', 'Engineer', 'Intern']
+        }
+    ]).then(response => {
+        switch(response.role) {
+            case 'Manager':
+                manager();
+                break;
+            case 'Engineer':
+                engineer();
+                break;
+            case 'Intern':
+                intern();
+                break;
+        }
+    })
+}
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+// function to prompt engineer-related details, which enable us to call the Engineer constructor 
+function engineer() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: "Please enter the engineer's name:",
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: "Please enter the engineer's ID number:",
+            name: 'id'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the engineer's email:",
+            name: 'email'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the engineer's Github username:",
+            name: 'github'   
+        },
+    ])
+    .then(response => {
+        // Create a new manager profile with user's inputs 
+        const newEngineer = new Engineer(response.name, response.id, response.email, response.github);
+        // Store manager profile details into the team object
+        team.push(newEngineer);
+        
+        // Call nextStep function
+        nextStep();
+    });
+}
+
+// function to prompt intern-related details, which enable us to call the Intern constructor 
+function intern() {
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: "Please enter the intern's name:",
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: "Please enter the intern's ID number:",
+            name: 'id'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the intern's email:",
+            name: 'email'   
+        },
+        {
+            type: 'input',
+            message: "Please enter the intern's school name:",
+            name: 'school'   
+        },
+    ])
+    .then(response => {
+        // Create a new manager profile with user's inputs 
+        const newIntern = new Intern(response.name, response.id, response.email, response.school);
+        // Store manager profile details into the team object
+        team.push(newIntern);
+        
+        // Call nextStep function
+        nextStep();
+    });
+}
+
+// function to create Team Profile Website
+function generateWebsite() {
+    const generateTeam = render(team)
+
+    fs.writeFile(outputPath, generateTeam, (error)=>{
+        error ? console.log(error) : console.log('Check the output folder!');
+    })
+}
+
+// Call necessary functions
+init();
